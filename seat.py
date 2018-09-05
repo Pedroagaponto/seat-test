@@ -8,12 +8,14 @@ def get_emissao(ticket):
 
 def fill_stats(tickets):
     position = 0
+    waitTime = avg_service_time(tickets)
 
     for t in tickets:
         if 'chamada' in t:
             continue
 
         t["naFrente"] = position
+        t["espera"] = (position + 1) * waitTime
         position += 1
 
 
@@ -22,6 +24,15 @@ def print_tickets(tickets):
         print t["senha"],
         print t["emissao"],
         print t["prioridade"]
+
+
+def avg_service_time(tickets):
+    serviceTime = list([])
+    for t in tickets:
+        if 'fim' in t:
+            serviceTime.append(t["fim"]-t["chamada"])
+
+    return sum(serviceTime)/len(serviceTime)
 
 
 def get_unique(tickets):
