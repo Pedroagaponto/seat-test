@@ -6,6 +6,17 @@ def get_emissao(ticket):
     return int(ticket["emissao"])
 
 
+def fill_stats(tickets):
+    position = 0
+
+    for t in tickets:
+        if 'chamada' in t:
+            continue
+
+        t["naFrente"] = position
+        position += 1
+
+
 def print_tickets(tickets):
     for t in tickets:
         print t["senha"],
@@ -37,6 +48,7 @@ def main():
     uniq = get_unique(tickets)
 
     uniq.sort(key=get_emissao)
+    fill_stats(uniq)
 
     result = {"nome": name, "chave": data["chave"], "resultado": uniq}
     rPost = requests.post(data["postTo"]["url"], data=result)
