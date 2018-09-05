@@ -47,6 +47,23 @@ def get_unique(tickets):
     return uniq
 
 
+def print_hist(tickets):
+    waitTimes = []
+    for t in tickets:
+        if "chamada" in t:
+            waitTimes.append((t["chamada"] - t["emissao"])/int(3e5))
+
+    hist = []
+    for i in range(3):
+        hist.append(waitTimes.count(i))
+    hist.append(len(waitTimes) - sum(hist))
+
+    text = ["< 05min: {}{}{}", "< 10min: {}{}{}",
+            "< 15min: {}{}{}", "> 15min: {}{}{}"]
+    for i in range(4):
+        print text[i].format("#"*hist[i], ' ' if hist[i] > 0 else '', hist[i])
+
+
 def main():
     name = "Pedro Henrique"
     url = "http://seat.ind.br/processo-seletivo/2018/02/desafio.php"
@@ -60,6 +77,7 @@ def main():
 
     uniq.sort(key=get_emissao)
     fill_stats(uniq)
+    print_hist(uniq)
 
     result = {"nome": name, "chave": data["chave"], "resultado": uniq}
     rPost = requests.post(data["postTo"]["url"], data=result)
