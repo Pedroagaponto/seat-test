@@ -6,6 +6,15 @@ def get_emissao(ticket):
     return int(ticket["emissao"])
 
 
+def get_prioridade(ticket):
+    priorityList = {"atendido": -1, "preferencial": 0, "geral": 1}
+    priority = priorityList[ticket["prioridade"]]
+    if 'chamada' in ticket:
+        priority = priorityList["atendido"]
+
+    return int(priority)
+
+
 def fill_stats(tickets):
     position = 0
     waitTime = avg_service_time(tickets)
@@ -76,6 +85,7 @@ def main():
     uniq = get_unique(tickets)
 
     uniq.sort(key=get_emissao)
+    uniq.sort(key=get_prioridade)
     fill_stats(uniq)
     print_hist(uniq)
 
